@@ -2,10 +2,11 @@ Aircraft application
 
 How to run?
 - On Mac
-    - Download the repository to your local machine
-    - Open a terminal and go to the folder where you downloaded the repository
-    - Type python -m SimpleHTTPServer 8091 in your command prompt
-    - Open your web browser and go to the address http://127.0.0.1:8091/index.html
+    - Clone repository
+    - Open terminal and go to that directory
+    - Type npm install
+    - Type npm start
+    - Open your web browser and go to the address http://localhost:8000/app/index.html#/
 
 
 User Operations
@@ -18,7 +19,7 @@ User Operations
 
 Algorithms
 
-- Enqueue: Add in sorted order. Complexity O(N)
+- Enqueue: Add at appropriate location. Queue is always sorted. Complexity O(1) -- depends on array implementation
 
 - Dequeue: Remove the first element from the queue. Complexity O(1)
 
@@ -64,7 +65,6 @@ Custom Services
     - Uses custom systemBootService, aircraftComparisonService
     - Provides the ability to enqueue items
         - enqueue the aircraft at the correctly sorted order (for dequeue)
-        - Insertion is O(N)
     - Provides the ability to dequeue the highest priority item in the queue
         - Remove the item at the head of the queue
         - Dequeue is O(1)
