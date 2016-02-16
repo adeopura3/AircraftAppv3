@@ -68,7 +68,7 @@
                 <div class="col-md-6">Dequeue aircraft with highest priority</div>
                 
                 <div class="col-md-6">
-                    <input type="button" ng-click="dequeueAircraftWithHighestPriority()" class="btn btn-primary" value="Dequeue Aircraft" ng-disabled="aircraftsInSystem.length === 0"/>
+                    <input type="button" ng-click="dequeueAircraftWithHighestPriority()" class="btn btn-primary" value="Dequeue Aircraft" ng-disabled="aircraftsInSystem().length === 0"/>
                 </div>              
             </div>
         </div>
@@ -101,7 +101,7 @@
                     <!---- Use a custom directive in order to show the aircraft details
                     If there was a decision to change the row display, only this directive would
                     have to change ---->
-                    <tr aircraft-details aircraft-object="aircraft" ng-repeat="aircraft in aircraftsInSystem"></tr>
+                    <tr aircraft-details aircraft-object="aircraft" ng-repeat="aircraft in aircraftsInSystem()"></tr>
                 </tbody>
             </table>
         </div>
