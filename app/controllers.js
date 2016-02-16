@@ -31,8 +31,9 @@ airTrafficControlApp.controller('airTrafficControlAndStatus', ['$scope', '$timeo
     var self = this;
     $scope.aircraftQueue = [];
     
-    // These are for animation to show confirmation for 10 seconds
-    // and then remove it
+    // These are for animation to show enqueue and
+    // dequeue confirmation for 10 seconds
+    // and then removing those
     enqueueTimeoutPromise = null;
     dequeueTimeoutPromise = null;
     
