@@ -59,13 +59,14 @@ airTrafficControlApp.controller('airTrafficControlAndStatus', ['$scope', '$timeo
     
     // As the queue length changes, we need to
     // update the display. This display is
-    // for the list for of all aircrafts in the system
+    // for the list for of all aircrafts in the system  
     $scope.$watch(function(){
         $scope.aircraftsInSystem = queueManagementService.getAllAircraftsInSystemInPriorityOrder();
     }
     , function (newValue, oldValue){
         $scope.aircraftsInSystem = newValue;
     });
+    
     
     
     // Club together all operations

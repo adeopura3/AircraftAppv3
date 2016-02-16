@@ -126,8 +126,4 @@ airTrafficControlApp.service('queueManagementService', [function() {
         return dequeuedItem;
     };
     
-    return{
-        getAllAircraftsInSystemInPriorityOrder: getAllAircraftsInSystemInPriorityOrder
-    }
-    
 }]);
