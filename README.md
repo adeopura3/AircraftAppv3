@@ -64,7 +64,12 @@ Custom Services
     - Uses Angular in build service q, timeout,
     - Uses custom systemBootService, aircraftComparisonService
     - Provides the ability to enqueue items
-        - enqueue the aircraft at the correctly sorted order (for dequeue)
+        - enqueue the aircraft at the correctly sorted order
+        - Single queue is used
+        - Maintain positions for the first occurance of each different priority of aircraft
+        - When inserting, find the starting position of the next lower priority aircraft in queue
+            - Insert at that position and update the bookkeeping variables
     - Provides the ability to dequeue the highest priority item in the queue
         - Remove the item at the head of the queue
+        - Update the first occurance indices for each of the lower priority aircrafts
         - Dequeue is O(1)
