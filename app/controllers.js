@@ -2,7 +2,7 @@
 
 // Home controller
 // Use the array to avoid the minification problem
-airTrafficControlApp.controller('homeController', ['$scope', '$location', 'systemBootService' , function($scope, $location, systemBootService){
+airTrafficControlApp.controller('homeController', ['$scope', '$location', 'systemBootService' , 'queueManagementService', function($scope, $location, systemBootService, queueManagementService){
     
     // If the system is already booted, redirect to
     // the air traffic control page
@@ -16,6 +16,7 @@ airTrafficControlApp.controller('homeController', ['$scope', '$location', 'syste
         systemBootService.bootSystem()
         .then(function(bootStatus){
             // redirect to the air traffic control view
+            queueManagementService.initialize();
             $location.path("/airTrafficControlAndStatus");
         })
         .catch(function(errorMessage){

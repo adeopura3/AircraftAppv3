@@ -49,7 +49,7 @@ describe('queueManagementService', function() {
         var dateTimeSecond = new Date().getTime() - 500;
         var dateTimeThird = new Date().getTime();
     
-        
+        // Passenger large
         var aircraftPassengerLargeFirst = {"type": "Passenger", "size": "Large", "timeAdded": dateTimeFirst};
         var aircraftPassengerLargeSecond = {"type": "Passenger", "size": "Large", "timeAdded": dateTimeSecond};
         var aircraftPassengerLargeThird = {"type": "Passenger", "size": "Large", "timeAdded": dateTimeThird};
@@ -99,7 +99,6 @@ describe('queueManagementService', function() {
         expect(queueManagementService.numberOfItemsInQueue()).toBe(6);
        
        
-        
         queueManagementService.enqueueItem(aircraftPassengerSmallFirst);
         $timeout.flush();
         expect(queueManagementService.numberOfItemsInQueue()).toBe(7);
@@ -126,7 +125,6 @@ describe('queueManagementService', function() {
         
         
         // Dequeue
-        // Passenger Large
         var promise = queueManagementService.dequeueItemWithHighestPriority();
         $timeout.flush();
         var dequeuedAircraft = promise.$$state.value;   
@@ -147,7 +145,6 @@ describe('queueManagementService', function() {
         expect(queueManagementService.numberOfItemsInQueue()).toBe(9);
         
         
-        // Passenger Small
         var promise = queueManagementService.dequeueItemWithHighestPriority();
         $timeout.flush();
         var dequeuedAircraft = promise.$$state.value;   
@@ -185,6 +182,8 @@ describe('queueManagementService', function() {
         expect(queueManagementService.numberOfItemsInQueue()).toBe(7);
         // end enqueue in between
         
+        
+        // Resume dequeue
         var promise = queueManagementService.dequeueItemWithHighestPriority();
         $timeout.flush();
         var dequeuedAircraft = promise.$$state.value;   
@@ -212,7 +211,7 @@ describe('queueManagementService', function() {
         expect(angular.equals(dequeuedAircraft, aircraftCargoLargeThird)).toBe(true);
         expect(queueManagementService.numberOfItemsInQueue()).toBe(3);
         
-        // Cargo SMall
+        // Cargo Small
         var promise = queueManagementService.dequeueItemWithHighestPriority();
         $timeout.flush();
         var dequeuedAircraft = promise.$$state.value;   

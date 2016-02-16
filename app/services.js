@@ -208,6 +208,10 @@ airTrafficControlApp.service('queueManagementService', ['$q', '$timeout', 'aircr
         // no aircrafts yet, so mark all is invalid
         this.queuePriorityMarkers[queuePriorityMarkerIndex] = -1;
     }
+      
+    this.initialize = function(){
+        return self.queue = [];
+    };
         
     // Determine the number of items present in the queue
     this.numberOfItemsInQueue = function(){
