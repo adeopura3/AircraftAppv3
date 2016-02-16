@@ -67,6 +67,7 @@ airTrafficControlApp.controller('airTrafficControlAndStatus', ['$scope', '$timeo
         $scope.aircraftsInSystem = newValue;
     });
     
+    
     // Club together all operations
     // that need to run before enqueue
     function performPreEnqueueOperations() {
