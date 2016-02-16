@@ -1,5 +1,4 @@
-
-    <!----------start of enqueue---->
+<!----------start of enqueue---->
     
     <div class ="panel panel-default">
         <div class="panel-heading">
@@ -51,7 +50,8 @@
         when the footer is not being displayed ---->
         <div class="panel-footer" ng-style="{'visibility': showEnqueueConfirmation?'visible':'hidden'}">
             <!----TODO: Animation ---->
-            <label> Enqueued aircraft of type {{ enqueuedAircraft.type }} and size {{ enqueuedAircraft.size }}</label>
+            <label> Enqueued aircraft of type {{ enqueuedAircraft.type }} and size {{ enqueuedAircraft.size }}.
+            Aircraft was added at position {{ enqueueData.addedAtPosition }} out of a total of {{ enqueueData.totalSize }} aircrafts</label>
         </div>
     </div>
     
@@ -68,7 +68,7 @@
                 <div class="col-md-6">Dequeue aircraft with highest priority</div>
                 
                 <div class="col-md-6">
-                    <input type="button" ng-click="dequeueAircraftWithHighestPriority()" class="btn btn-primary" value="Dequeue Aircraft" ng-disabled="aircraftsInSystem.length === 0"/>
+                    <input type="button" ng-click="dequeueAircraftWithHighestPriority()" class="btn btn-primary" value="Dequeue Aircraft" ng-disabled="aircraftQueue.length === 0"/>
                 </div>              
             </div>
         </div>
@@ -101,7 +101,7 @@
                     <!---- Use a custom directive in order to show the aircraft details
                     If there was a decision to change the row display, only this directive would
                     have to change ---->
-                    <tr aircraft-details aircraft-object="aircraft" ng-repeat="aircraft in aircraftsInSystem"></tr>
+                    <tr aircraft-details aircraft-object="aircraft" ng-repeat="aircraft in aircraftQueue"></tr>
                 </tbody>
             </table>
         </div>
@@ -109,4 +109,3 @@
     </div>
     
     <!-----end of system details ----->
-    
