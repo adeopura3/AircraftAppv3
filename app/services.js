@@ -77,24 +77,21 @@ airTrafficControlApp.service('aircraftPriorityDeterminationService', [function()
             }
         }
         
-        // Compare types
-        var typeComparison = self.compareType(aircraftA.type, aircraftB.type);
+        // Compare priorities
+        numericalPriorityAircraftA = self.determineNumericalPriority(aircraftA);
+        numericalPriorityAircraftB = self.determineNumericalPriority(aircraftB);
         
-        if (typeComparison !== 0) {
-            // If types are different, we already have our result
-            return typeComparison;
+        if (numericalPriorityAircraftA > numericalPriorityAircraftB) {
+            //aircraft B has a higher priority
+            return -1;
+        }
+        else if (numericalPriorityAircraftA < numericalPriorityAircraftB) {
+            //aircraft A has a higher priority
+            return 1;
         }
         
-        // Types are the same, so now compare sizes
-        var sizeComparison = self.compareSize(aircraftA.size, aircraftB.size);
-        
-        if (sizeComparison !== 0) {
-            // If sizes are different, we already have our result
-            return sizeComparison;
-        }
-        
-        // Type and size are the same, compare the time that
-        // the aircrafts were added
+        // Both have same priority
+        // compare time when the aircrafts were added to system
         var timeAddedToSystemComparison = self.compareTimeAddedToSystem(aircraftA.timeAdded, aircraftB.timeAdded);
         
         if (timeAddedToSystemComparison !== 0) {
@@ -104,43 +101,6 @@ airTrafficControlApp.service('aircraftPriorityDeterminationService', [function()
         
         // Everything is the same, so the comparison returns a 0
         return 0;
-    };
-    
-    self.compareType = function (aircraftAType, aircraftBType) {
-        // Aircraft Type Comparison based on problem specifications
-        
-        if (aircraftAType === aircraftBType) {
-            return 0;
-        }
-        
-        if (aircraftAType === 'Passenger') {
-            return 1;
-        }
-        
-        if (aircraftAType === 'Cargo') {
-            return -1;
-        }
-        
-        // This is not possible
-        throw "Unable to compare aircraft types " + aircraftAType + " and " + aircraftBType;
-    };
-    
-    self.compareSize = function(aircraftASize, aircraftBSize) {
-        // Aircraft size comparison based on problem specifications
-        if (aircraftASize === aircraftBSize) {
-            return 0;
-        }
-        
-        if (aircraftASize === 'Large') {
-            return 1;
-        }
-        
-        if (aircraftASize === 'Small') {
-            return -1;
-        }
-        
-        // This is not possible
-        throw "Unable to compare aircraft sizes " + aircraftASize + " and " + aircraftBSize;
     };
     
     self.compareTimeAddedToSystem = function (aircraftATimeAdded, aircraftBTimeAdded) {

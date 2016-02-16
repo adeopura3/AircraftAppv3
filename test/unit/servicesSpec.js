@@ -233,3 +233,45 @@ describe('queueManagementService', function() {
     }));
     
 });
+
+describe('aircraftPriorityDeterminationService', function() {
+    beforeEach(module('airTrafficControlApp'));
+    
+    var aircraftPriorityDeterminationService;
+    var aircraftPassengerLarge = {"type": "Passenger", "size": "Large", "timeAdded": new Date().getTime()};
+    var aircraftPassengerSmall = {"type": "Passenger", "size": "Small", "timeAdded": new Date().getTime()};
+    var aircraftCargoLarge = {"type": "Cargo", "size": "Large", "timeAdded": new Date().getTime()};
+    var aircraftCargoSmall = {"type": "Cargo", "size": "Small", "timeAdded": new Date().getTime()};
+        
+    
+    beforeEach (function(){
+        
+        inject(function($injector){
+            aircraftPriorityDeterminationService = $injector.get('aircraftPriorityDeterminationService');
+        });
+    });
+    
+    it('should consider Passenger Large as higer priority than Passenger Small', (function() {
+        expect(aircraftPriorityDeterminationService.compare (aircraftPassengerLarge, aircraftPassengerSmall)).toBe(1);
+    }));
+    
+    it('should consider Passenger Small as higer priority than Cargo Large', (function() {
+        expect(aircraftPriorityDeterminationService.compare (aircraftPassengerSmall, aircraftCargoLarge)).toBe(1);
+    }));
+    
+    it('should consider Cargo Large as higer priority than Cargo Small', (function() {
+        expect(aircraftPriorityDeterminationService.compare (aircraftCargoLarge, aircraftCargoSmall)).toBe(1);
+    }));
+    
+    it('should consider earlier enqueued aircrafts of the same type and size as higher priority than later enqueued aircrafts', (function() {
+        var dateTimeFirst = new Date().getTime() - 1000;
+        var dateTimeSecond = new Date().getTime() - 500;
+    
+        // Passenger large
+        var aircraftPassengerLargeFirst = {"type": "Passenger", "size": "Large", "timeAdded": dateTimeFirst};
+        var aircraftPassengerLargeSecond = {"type": "Passenger", "size": "Large", "timeAdded": dateTimeSecond};
+        
+        expect(aircraftPriorityDeterminationService.compare (aircraftPassengerLargeFirst, aircraftPassengerLargeSecond)).toBe(1);
+    }));
+    
+});
