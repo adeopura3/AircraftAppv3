@@ -98,14 +98,14 @@
                   </tr>
                 </thead>
                 <tbody>
-                    <!---- Use a custom directive in order to show the aircraft details
-                    If there was a decision to change the row display, only this directive would
-                    have to change ---->
-                    <tr aircraft-details aircraft-object="aircraft" ng-repeat="aircraft in aircraftsInSystem()"></tr>
+                    <tr ng-repeat="aircraft in aircraftsInSystem()">
+                        <td>{{ aircraft.type }} </td>
+                        <td>{{ aircraft.size }}</td>
+                        <td>{{ aircraft.timeAdded | date: 'HH:mm:ss MMM d, yyyy' }}</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
-        
     </div>
     
     <!-----end of system details ----->
