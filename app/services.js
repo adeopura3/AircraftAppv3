@@ -1,43 +1,48 @@
 // Services
 
 // Boot service
-airTrafficControlApp.service('systemBootService', ['$location', function($location){
+
+airTrafficControlApp.factory('systemBootService', ['$location', 'queueManagementService', function($location, queueManagementService){
     
-    var self = this;
     // Initialize the system status to be
     // unstarted at the beginning
-    this.systemBootStatus = 'Unstarted';
+    var systemBootStatus = 'Unstarted';
     
     // Have a function to determine if the system is booted
-    this.systemIsBooted = function(){
-        // Note that within a function, "this" will refer
-        // to the function itself (Functions are objects in JS)
-        // so use the self variable as defined earlier in the service
-        // which refers to the service
-        return (self.systemBootStatus === 'Booted');
+    var systemIsBooted = function(){
+        return (systemBootStatus === 'Booted');
     };
     
     // Function is called when the system is booted
-    this.bootSystem = function(){
-        self.systemBootStatus = 'Booted';
+    var bootSystem = function(){
+        systemBootStatus = 'Booted';
+        
+        // initialize queue management service
+        queueManagementService.initialize();
     };
     
     // If the system is not booted, redirect to
     // home page
-    this.handleUnbootedSystemAccess = function(){
+    var handleUnbootedSystemAccess = function(){
         $location.path("/");
     };
-        
-}]);
+    
+    return {
+        bootSystem: bootSystem,
+        systemIsBooted: systemIsBooted,
+        handleUnbootedSystemAccess: handleUnbootedSystemAccess
+    };
+}]); 
 
 
 
 
 // Queue management service [Enqueue/Dequeue]
-// Use the array to avoid the minification problem
-airTrafficControlApp.service('queueManagementService', [function() {
-    var self = this;
-    this.aircraftQueuesContainer = [{
+airTrafficControlApp.factory('queueManagementService', [function() {
+    
+    // define 4 queues, one for each type size
+    // combination of aircraft
+    var aircraftQueuesContainer = [{
         "type": "Passenger",
         "size": "Large",
         "aicraftQueue": []
@@ -59,71 +64,100 @@ airTrafficControlApp.service('queueManagementService', [function() {
     }
     ];
       
-    this.initialize = function(){
+    // Go over all the aircraft queues and initialize them
+    // to be empty. This happens at system boot
+    var initialize = function(){
         // Just clear out all the queues
-        for (aircraftQueueContainerIndex = 0;  aircraftQueueContainerIndex < self.aircraftQueuesContainer.length; aircraftQueueContainerIndex++){
-            this.aircraftQueuesContainer[aircraftQueueContainerIndex].aircraftQueue = [];
+        for (aircraftQueueContainerIndex = 0;
+             aircraftQueueContainerIndex < aircraftQueuesContainer.length; aircraftQueueContainerIndex++){
+            aircraftQueuesContainer[aircraftQueueContainerIndex].aircraftQueue = [];
         }
     };
         
     // Determine the number of items present in the queue
-    this.numberOfAircraftsInQueue = function(){
+    // This helps enable/disable the dequeue button
+    var numberOfAircraftsInQueue = function(){
         var numberOfAircrafts = 0;
-        for (aircraftQueueContainerIndex = 0;  aircraftQueueContainerIndex < self.aircraftQueuesContainer.length; aircraftQueueContainerIndex++){
-            numberOfAircrafts = numberOfAircrafts + this.aircraftQueuesContainer[aircraftQueueContainerIndex].aircraftQueue.length;
+        for (aircraftQueueContainerIndex = 0;
+            aircraftQueueContainerIndex < aircraftQueuesContainer.length;
+            aircraftQueueContainerIndex++){
+            numberOfAircrafts = numberOfAircrafts + aircraftQueuesContainer[aircraftQueueContainerIndex].aircraftQueue.length;
         }
-        
         return numberOfAircrafts;
     };
     
-    this.getQueueWithMatcingPriority = function(aircraft){
-        for (aircraftQueueContainerIndex = 0;  aircraftQueueContainerIndex < self.aircraftQueuesContainer.length; aircraftQueueContainerIndex++){
-            if ((this.aircraftQueuesContainer[aircraftQueueContainerIndex].size === aircraft.size)
-                && this.aircraftQueuesContainer[aircraftQueueContainerIndex].type === aircraft.type)
+    // Determine the queue that we need to insert the item
+    // into based on the type,size
+    var getQueueWithMatcingPriority = function(aircraft){
+        for (aircraftQueueContainerIndex = 0;
+             aircraftQueueContainerIndex < aircraftQueuesContainer.length;
+             aircraftQueueContainerIndex++){
+            if ((aircraftQueuesContainer[aircraftQueueContainerIndex].size === aircraft.size)
+                && aircraftQueuesContainer[aircraftQueueContainerIndex].type === aircraft.type)
                 {
-                return this.aircraftQueuesContainer[aircraftQueueContainerIndex].aircraftQueue;
+                return aircraftQueuesContainer[aircraftQueueContainerIndex].aircraftQueue;
                 }
         }
         
         return null;
     };
     
-    this.getHighestPriorityNonEmptyQueue = function(aircraft){
-        for (aircraftQueueContainerIndex = 0;  aircraftQueueContainerIndex < self.aircraftQueuesContainer.length; aircraftQueueContainerIndex++){
-            if (this.aircraftQueuesContainer[aircraftQueueContainerIndex].aircraftQueue.length > 0) {
-                return this.aircraftQueuesContainer[aircraftQueueContainerIndex].aircraftQueue
+    // determine the highest priority non empty
+    // queue so that we can dequeue from that
+    // queue
+    var getHighestPriorityNonEmptyQueue = function(aircraft){
+        for (aircraftQueueContainerIndex = 0;
+             aircraftQueueContainerIndex < aircraftQueuesContainer.length;
+             aircraftQueueContainerIndex++){
+            if (aircraftQueuesContainer[aircraftQueueContainerIndex].aircraftQueue.length > 0) {
+                return aircraftQueuesContainer[aircraftQueueContainerIndex].aircraftQueue
             }
         }
         return null;
     };
     
-    this.getAllAircraftsInSystemInPriorityOrder = function(){
+    // This function provides a list of all aircrafts
+    // in the system in order of priority
+    var getAllAircraftsInSystemInPriorityOrder = function(){
         aircraftsInSystemInPriorityOrder = [];
-        for (aircraftQueueContainerIndex = 0;  aircraftQueueContainerIndex < self.aircraftQueuesContainer.length; aircraftQueueContainerIndex++){
-            if (this.aircraftQueuesContainer[aircraftQueueContainerIndex].aircraftQueue.length > 0) {
-                aircraftsInSystemInPriorityOrder = aircraftsInSystemInPriorityOrder.concat(this.aircraftQueuesContainer[aircraftQueueContainerIndex].aircraftQueue);
+        for (aircraftQueueContainerIndex = 0;
+             aircraftQueueContainerIndex < aircraftQueuesContainer.length;
+             aircraftQueueContainerIndex++){
+            // Go in order and find the first non empty queue
+            if (aircraftQueuesContainer[aircraftQueueContainerIndex].aircraftQueue.length > 0) {
+                aircraftsInSystemInPriorityOrder =
+                    aircraftsInSystemInPriorityOrder.concat(aircraftQueuesContainer[aircraftQueueContainerIndex].aircraftQueue);
             }
         }
         
         return aircraftsInSystemInPriorityOrder;
-    }
+    }  
     
-    this.insertIntoQueue = function (itemToInsert) {
+    // Public function that enqueues the item
+    var enqueueItem = function(itemToInsert){
         if (null == itemToInsert) {
             throw "Trying to add invalid null item";
         }
         
-        var aircraftQueue = this.getQueueWithMatcingPriority(itemToInsert);
-        aircraftQueue.push(itemToInsert);        
-    };    
-    
-    this.enqueueItem = function(item){
-        self.insertIntoQueue(item);
+        // Get the appropriate queue that
+        // we should use to insert the item
+        var aircraftQueue = getQueueWithMatcingPriority(itemToInsert);
+        aircraftQueue.push(itemToInsert);
     };
     
-    this.dequeueItemWithHighestPriority = function(){
-        var dequeuedItem = (self.getHighestPriorityNonEmptyQueue().splice(0,1))[0];
+    // Dequeue item with highest priority
+    // Public function
+    var dequeueItemWithHighestPriority = function(){
+        var dequeuedItem = (getHighestPriorityNonEmptyQueue().splice(0,1))[0];
         return dequeuedItem;
+    };
+    
+    return{
+        initialize: initialize,
+        numberOfAircraftsInQueue: numberOfAircraftsInQueue,
+        getAllAircraftsInSystemInPriorityOrder: getAllAircraftsInSystemInPriorityOrder,
+        enqueueItem: enqueueItem,
+        dequeueItemWithHighestPriority: dequeueItemWithHighestPriority
     };
     
 }]);

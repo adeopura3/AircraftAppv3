@@ -65,7 +65,7 @@ describe('airTrafficControlApp airTrafficControlAndStatus controller', function(
     var scope = {};
     
     airTrafficControlAndStatusController = $controller('airTrafficControlAndStatus', {$scope : scope});
-    expect($location.path()).toBe('/');    
+    expect($location.path()).toBe('/');  
   }));
     
 });

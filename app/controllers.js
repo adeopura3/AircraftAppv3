@@ -2,7 +2,7 @@
 
 // Home controller
 // Use the array to avoid the minification problem
-airTrafficControlApp.controller('homeController', ['$scope', '$location', 'systemBootService' , 'queueManagementService', function($scope, $location, systemBootService, queueManagementService){
+airTrafficControlApp.controller('homeController', ['$scope', '$location', 'systemBootService', function($scope, $location, systemBootService){
     
     // If the system is already booted, redirect to
     // the air traffic control page
@@ -13,9 +13,6 @@ airTrafficControlApp.controller('homeController', ['$scope', '$location', 'syste
     $scope.bootSystem = function(){
         // Boot system
         systemBootService.bootSystem();
-        
-        // initialize queue management service
-        queueManagementService.initialize();
         
         // Redirect to the airTrafficControlAndStatus page
         $location.path("/airTrafficControlAndStatus");
@@ -29,7 +26,6 @@ airTrafficControlApp.controller('homeController', ['$scope', '$location', 'syste
 airTrafficControlApp.controller('airTrafficControlAndStatus', ['$scope', '$timeout', 'systemBootService', 'queueManagementService', function($scope, $timeout, systemBootService, queueManagementService) {
     
     var self = this;
-    $scope.aircraftQueue = [];
     
     // These are for animation to show enqueue and
     // dequeue confirmation for 10 seconds
@@ -78,7 +74,7 @@ airTrafficControlApp.controller('airTrafficControlAndStatus', ['$scope', '$timeo
             $timeout.cancel(enqueueTimeoutPromise);
             enqueueTimeoutPromise = null;
         }
-    }
+    };
     
     // Club together all operations
     // that need to run after enqueue
@@ -91,7 +87,7 @@ airTrafficControlApp.controller('airTrafficControlAndStatus', ['$scope', '$timeo
             // after a certain time
             $scope.showEnqueueConfirmation = false;
         }, 10000);
-    }
+    };
     
     // Club together all operations
     // that need to run before dequeue
@@ -106,7 +102,7 @@ airTrafficControlApp.controller('airTrafficControlAndStatus', ['$scope', '$timeo
             $timeout.cancel(dequeueTimeoutPromise);
             dequeueTimeoutPromise = null;
         }
-    }
+    };
     
     function performPostDequeueSuccessOperations() {
         // Start showing the dequeue confirmation
@@ -117,7 +113,7 @@ airTrafficControlApp.controller('airTrafficControlAndStatus', ['$scope', '$timeo
             // after a certain time
             $scope.showDequeueConfirmation = false;
         }, 10000);
-    }
+    };
     
     
     $scope.enqueueAircraft = function() {
